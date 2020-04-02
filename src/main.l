@@ -1,30 +1,52 @@
-
-
 /*SECAO 1 - DEFINICOES */ 
 
 %{
 #include <stdio.h>
+#include <string.h>
+
+int a,ponto = 0;
 %}
 
 
-alfanumericos[a-zA-Z0-9]
-invalidos[\.\-_]
+ALL [a-zA-Z0-9] 
+INV [\.\-\_] 
 
 /* SECAO 2 - REGRAS */
 %%
 
-({alfanumericos}+{invalidos}*{alfanumericos}+@{alfanumericos}){
-    printf("%s\n",yytext);
+  
+({ALL}+{INV}*{ALL}+)*@{ALL}+(({INV}+)?{ALL}+)* {
 
-}
-. ; 
+    printf("%s\n", yytext);
 
-\n ;
+    }
+
+({ALL}+{INV}*{ALL}+)*@{ALL}+(({INV}+)?{ALL}+)[.]+ {
+  
+  do 
+  {
+    if(yytext[a] == "."){
+    ponto ++;
+    }
+
+   yytext++;
+
+  }while(ponto < 2);
+
+  yytext[a]=='0';
+
+  printf("%s\n", yytext);
+};
+. ;
+
+\n;
+[[:space:]]+ ;
+[[:^space:]]+ ;
 
 %%
 /*    SECAO 3 - SUBROTINAS*/
 
-int main() {
-  yylex();
-  return 0;
+  int main() {
+    yylex();
+    return 0;
 }
